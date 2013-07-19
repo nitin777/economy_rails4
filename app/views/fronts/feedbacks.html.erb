@@ -1,0 +1,38 @@
+<h3><%= t("general.this_people_read_your_cv") %></h3>
+<span class="invite_btn"><%= link_to t("general.invite"), invite_path, :class => "btn btn-info" %></span>
+<div class="loginfom">
+
+  <% if @feedbacks.size > 0 %>
+  
+    <div id='chart'></div>
+    <%= render_chart(@user_cv_chart, 'chart') %>  
+    
+    <table class="table table-condensed" width="100%">
+      
+     <thead>
+       <tr><td>&nbsp;</td></tr> 
+      <tr>
+        <th width="20%"></th>
+        <th width="10%"><%= t("general.invited_date")%></th>
+        <th width="10%">&nbsp;</th>
+        <th width="50%"><%= t("general.feedbacks") %></th>
+        <th width="10%"><%= t("general.feedback_date")%></th>
+      </tr>
+     <thead>   
+      <tbody>
+          <% @feedbacks.load.each do |o_row| %>
+            <tr>
+              <td width="20%"><%= o_row.invited.email %></td>
+              <td><%= o_row.created_at.to_s(:default_date) if o_row.created_at %></td>
+              <td>&nbsp;</td>
+              <td><p><%= o_row.feedback.blank? ? '--' : o_row.feedback %></p></td>
+              <td><%= Date.parse(o_row.feedback_date.to_s).strftime('%e-%b-%Y') if o_row.feedback_date %></td>
+            </tr>
+          <% end %>
+       </tbody>
+    </table>
+    <%= will_paginate @feedbacks %>
+  <% else %>
+    <b><%= t("general.please_invite_and_send_cv") %></b>
+  <% end %>
+</div>
