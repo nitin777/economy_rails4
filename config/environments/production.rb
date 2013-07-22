@@ -85,6 +85,6 @@ Economy::Application.configure do
   MAIL_PORT = "587"
   MAIL_ADDRESS = "smtp.gmail.com"
   MAIL_DOMAIN = "gmail.com"
-  LINKEDIN_CONSUMER_KEY = "fk9qc6p7z0ci"
-  LINKEDIN_CONSUMER_SECRET = "neJvNNUaLjjWwC8L"    
+  LINKEDIN_CONSUMER_KEY = "ayewb1qis3dw"
+  LINKEDIN_CONSUMER_SECRET = "ZQSPwE7ee72C5SSm"    
 end
