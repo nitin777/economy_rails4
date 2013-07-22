@@ -11,35 +11,10 @@
       
       <%= f.button t("general.send"), :class => 'btn btn-info', :id => "invite_btn" %>      
       <%= link_to t("general.back"), feedbacks_path, :class => 'btn btn-info' %>
+      <span id="spinner" style="margin-right: 235px; float: right; display: none;">
+        <%= image_tag "loading.gif" %>
+      </span>  
     </div>
     <div class="cl"></div>
   <% end %>
 </div>
-<script type="text/javascript">
-    
-    $('#invite_btn').click(function() {
-      user_email = $('#user_email').val();
-      if (user_email == '') {
-        alert("Please enter email address");
-      } else {
-        jQuery.ajax({
-          type:'GET',
-          dataType:'html',
-          data:{email: user_email},
-          url:"/is_email_invited",
-          success:function(result){
-            var obj = JSON.parse(result);
-            if (obj.result == true) {
-              if(confirm("You already sent your cv to " +user_email+ " on " +obj.invited_date+ ". Do you wish to send it again?")) {
-                document.forms[0].submit();
-              }
-            } else {
-              document.forms[0].submit();
-            }
-          }
-        })
-      }
-      return false;  
-    });
-      
-</script>

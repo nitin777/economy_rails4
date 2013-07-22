@@ -23,10 +23,15 @@
           <%= link_to t("general.languages"),"#languages", :id => "stepform5" %>
         </li>        
       </ul>
+
       <span class="p_header_links">
         <%= link_to t("general.download_as_csv"), cv_xml_path %> | 
-        <%= link_to t("general.refresh_from_linkeding"), "/p/#{current_user.user_name}?refresh=true", data: { confirm: t("general.import_data_from_linkedin") } %>
-      </span>  
+        <%= link_to t("general.refresh_from_linkeding"), "/p/#{current_user.user_name}?refresh=true", :id => 'refresh_lnk_id', :onClick => "refresh_linkedin_data('#{t('general.import_data_from_linkedin')}'); return false;" %>
+      </span>
+      <span id="spinner" style="margin-top: -15px; float:right; display: none;">
+        <%= t("general.please_wait") %> <%= image_tag "loading.gif" %>
+      </span>      
+        
     </div>
       
     <div id="stepcontent1" style="display:block;">    
@@ -47,36 +52,3 @@
   
   <div class="cl"></div>
 </div>
-
-<script type="text/javascript">
-  $('#stepform1, #stepform11').click(function() {
-    $('#stepcontent2, #stepcontent3, #stepcontent4, #stepcontent5').hide();
-    $('#stepform2, #stepform3, #stepform4, #stepform5').removeClass('active');
-    $('#stepcontent1').show();
-    $('#stepform1').addClass('active');
-  });
-  $('#stepform2, #stepform22').click(function() {
-    $('#stepcontent1, #stepcontent3, #stepcontent4, #stepcontent5').hide();
-    $('#stepform1, #stepform3, #stepform4, #stepform5').removeClass('active');
-    $('#stepcontent2').show();
-    $('#stepform2').addClass('active');
-  });
-  $('#stepform3, #stepform33').click(function() {
-    $('#stepcontent2, #stepcontent1, #stepcontent4, #stepcontent5').hide();
-    $('#stepform2, #stepform1, #stepform4, #stepform5').removeClass('active');
-    $('#stepcontent3').show();
-    $('#stepform3').addClass('active');
-  });
-  $('#stepform4, #stepform44, #stepform66').click(function() {
-    $('#stepcontent2, #stepcontent3, #stepcontent1, #stepcontent5').hide();
-    $('#stepform2, #stepform3, #stepform1, #stepform5').removeClass('active');
-    $('#stepcontent4').show();
-    $('#stepform4').addClass('active');
-  });
-  $('#stepform5, #stepform55').click(function() {
-    $('#stepcontent2, #stepcontent3, #stepcontent1, #stepcontent4').hide();
-    $('#stepform2, #stepform3, #stepform1, #stepform4').removeClass('active');
-    $('#stepcontent5').show();
-    $('#stepform5').addClass('active');
-  });  
-</script>
