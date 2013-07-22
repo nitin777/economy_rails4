@@ -86,7 +86,5 @@ Economy::Application.configure do
   MAIL_ADDRESS = "smtp.gmail.com"
   MAIL_DOMAIN = "gmail.com"
   LINKEDIN_CONSUMER_KEY = "fk9qc6p7z0ci"
-  LINKEDIN_CONSUMER_SECRET = "neJvNNUaLjjWwC8L"
-  FACEBOOK_API = "540272539343552"
-  FACEBOOK_SECRET = "aca1b41bcdb6944d8157e69055a92ca4"    
+  LINKEDIN_CONSUMER_SECRET = "neJvNNUaLjjWwC8L"    
 end

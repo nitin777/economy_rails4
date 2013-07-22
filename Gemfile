@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+#ruby
+ruby "2.0.0"
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
@@ -38,23 +41,46 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+#authentication
 gem 'authlogic'
+
+#authentication through omniauth
 gem 'omniauth'
+
+#linkedin oauth
 gem 'omniauth-linkedin'
-gem 'omniauth-facebook'
+
+#linkedin profile data fetch
 gem 'linkedin'
+
+#random key generate
 gem 'webget_ruby_secure_random'
+
+#pagination
 gem "will_paginate"
+
+#image upload
 gem "carrierwave"
 gem "rmagick"
 gem "mini_magick"
+
+#mail sender
 gem "mail"
+
+#debugger
 gem 'debugger'
+
+#time difference
 gem 'time_diff'
-gem 'hashie'
-gem 'redis-objects'
+
+#google chart
 gem "google_visualr", ">= 2.1"
+
+#builder
 gem "builder"
+
+#static asset serving 
+gem 'rails_12factor', group: :production
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
