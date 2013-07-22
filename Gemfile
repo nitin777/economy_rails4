@@ -7,13 +7,13 @@ ruby "2.0.0"
 gem 'rails', '4.0.0'
 
 # Use Postgresql as the database for Active Record
-gem 'pg'
+gem 'pg', group: :production
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'sqlite3', group: :development
 
 # Use mysql2 as the database for Active Record
-gem 'mysql2'
+gem 'mysql2', group: :development
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
