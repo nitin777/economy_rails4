@@ -77,13 +77,23 @@ module LinkedinHandler
 		end
 			
 		def check_date_positions(position)
-	    if position.start_date.present? && position.start_date.month.present?
-	      start_date = "#{position.start_date.year}-#{position.start_date.month}-01"
+	    if position.start_date.present?
+	    	if position.start_date.month.present?
+	      	start_date = "#{position.start_date.year}-#{position.start_date.month}-01"
+	      else
+	      	start_date = "#{position.start_date.year}-01-01"
+	      end
+	      
 	      if position.is_current
 	        end_date = Date.today.to_s
 	      else
-	        end_date = "#{position.end_date.year}-#{position.end_date.month}-01"
+	      	if position.end_date.month.present?
+	        	end_date = "#{position.end_date.year}-#{position.end_date.month}-01"
+	        else
+	        	end_date = "#{position.end_date.year}-01-01"
+	        end		
 	      end
+	      
 	      return [start_date, end_date]
 	    end
 		end
