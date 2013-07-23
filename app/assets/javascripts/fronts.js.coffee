@@ -34,7 +34,8 @@ show_hide_header_link = (div_param, hide=true) ->
   else
     $(div_param).show()
     
-$ ->
+$(document).ready ->
+  
   $("input:text").eq(0).focus()
   
   $('#notice').delay(4000).animate

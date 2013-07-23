@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  default :from => "'EconomyOfOne'"
+  default :from => "'EconomyOfOne' <support@economyofone.com>"
 
   def registration_confirmation(email, body)
     mail(:to => "#{email}", :subject => t("general.new_registration"), :body => body, :content_type => "text/html")

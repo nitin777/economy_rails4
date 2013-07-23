@@ -9,7 +9,11 @@
     <% if is_admin? %>
       <%= render "admin_dashboard" %>
     <% elsif is_user? and @user.has_cv? %>
-      <%= render "user_dashboard" %>
+      <% if params[:username] %>
+        <%= render "user_dashboard" %>
+      <% else %>
+        <%= render "mainpitch" %>
+      <% end %>  
     <% end %>
 <% else %>
   <%= render "mainpitch" %>
