@@ -7,16 +7,13 @@
             <% if current_user %>
               <li><%= link_to t("general.logged_in_as", email: current_user.email), "#" %></li>
                 <% if is_user? %>
-                  <li><%#= link_to t("general.invite"), invite_path %></li>
                   <li data-no-turbolink><%= link_to t("general.who_saw_the_cv"), feedbacks_path %></li>
-                    
                 <% end %>  
                 <% if is_admin? %>
                   <li><%= link_to t("general.edit_profile"), edit_user_path(current_user.id)%></li>
                   <li><%= link_to t("general.change_password"), change_password_path %></li>  
-                <% end %>                  
-                
-                <li><%= link_to t("general.logout"), :logout %></li>
+                <% end %>
+              <li><%= link_to t("general.logout"), :logout %></li>
             <% else %>
                 <li><%= link_to t("general.login"), login_path %></li>
                 <li><%= link_to t("general.subscribe"), subscribe_path %></li>
@@ -30,7 +27,7 @@
               <ul class="nav"><li class="<%= 'active' if @static_pages %>"><%= link_to t("general.pages"), static_pages_path %></li></ul>
             <% end %>
             <% if is_user? %>
-              <ul class="nav"><li class="<%= 'active' if @dashboard %>"><%= link_to t("general.profile"), "/p/#{current_user.user_name}" %></li></ul>
+              <ul class="nav"><li class="<%= 'active' if @dashboard %>" data-no-turbolink><%= link_to t("general.profile"), "/p/#{current_user.user_name}" %></li></ul>
             <% end %>
           <% else %>
             <ul class="nav"><li class="<%= 'active' if @dashboard %>"><%= link_to t("general.dashboard"), "/dashboard" %></li></ul>    
