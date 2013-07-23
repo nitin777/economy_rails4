@@ -66,7 +66,7 @@ en:
     password_does_not_updated: "Password does not updated"
     logout: "Logout"
     home: "Home"
-    profile: "Profile"
+    profile: "Show My CV"
     positions: "Positions"
     educations: "Educations"
     languages: "Languages"
@@ -180,6 +180,8 @@ en:
     invited_date: "Invited On"
     feedback_date: "Feedback On"
     please_wait: "Please wait..."
+    no_contact_info: "There is no contact info on your LinkedIn profile. Edit this so people can contact you directly."
+    send: "Send"
 
     
   activerecord:

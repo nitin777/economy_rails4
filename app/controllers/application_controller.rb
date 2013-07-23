@@ -65,9 +65,11 @@ class ApplicationController < ActionController::Base
     if user
 			user_invited_by_current_user = current_user.invitings.where(:invited_user_id => user.id).first
 			if user_invited_by_current_user
-				return {result: true, invited_date: user_invited_by_current_user.created_at.to_s(:default_date)}
+				return {result: true, invited_date: user_invited_by_current_user.created_at.to_s(:default_date), is_user: true, user: user, invite: user_invited_by_current_user}
+			else
+				return {result: false, is_user: true, user: user}
 			end	
 	  end
-	  return {result: false}
+	  return {result: false, is_user: false}
   end
 end

@@ -2,8 +2,13 @@
     <tr>
       <td>
         <div style="float:left;">
+          
           <p>
             <%= image_tag @user.cv.picture_filename %>
+            <% if current_user.mobile.nil? %>
+              <span class="contactInfoErr"><%= t("general.no_contact_info") %></span>
+            <% end %>    
+            <div class="clearb">&nbsp;</div>        
             <h4>
               <%= "#{@user.first_name} #{@user.last_name}" %>
               <% unless @user.headline.blank? %>

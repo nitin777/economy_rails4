@@ -67,7 +67,7 @@ $ ->
             $("#spinner").show()
             document.forms[0].submit()
       }
-      false
+    false
       
   $("#stepform1, #stepform11").click (e) ->
     show_hide_header_link '#stepcontent2, #stepcontent3, #stepcontent4, #stepcontent5' 

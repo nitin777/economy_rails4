@@ -100,8 +100,11 @@ class FrontsController < ApplicationController
   def invite
 		@user = User.new
 		if params[:user]
+			
 			is_invited = invite_email_exists?(params[:user][:email])
-			if is_invited[:result] == false
+			
+			#user not found
+			if is_invited[:is_user] == false
 				#user role invite create 
 	    	invited_user = User.create(:username => params[:user][:email],
 	    									:email => params[:user][:email],
@@ -109,15 +112,17 @@ class FrontsController < ApplicationController
 	    									:is_provider => true)
 	    	invited_user.save(:validate => false)								
 				invited_user.role = Role.find_by_role_type("User")
-				invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), :is_original => true)
 			else
-				invited_user = User.find_by_email(params[:user][:email])
-				invite = Invite.find_by_inviting_user_id_and_invited_user_id(current_user.id, invited_user.id)
-				if invite
-					invite.created_at = Time.now
-				else
-					invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), :is_original => true)
-				end	
+				invited_user = is_invited[:user] 
+			end		
+			
+			#invite record not found
+			if is_invited[:result] == false
+				invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), :is_original => true)
+			else				
+				invite = is_invited[:invite]				
+				invite.created_at = Time.now
+				invite.save
 			end
 			
 			#options
