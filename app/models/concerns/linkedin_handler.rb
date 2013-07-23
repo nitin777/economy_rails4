@@ -102,7 +102,7 @@ module LinkedinHandler
 			
 			#experiences
 			cv_temp = []
-			self.cv_experiences.all.each do |row|
+			self.cv_experiences.load.each do |row|
 				cv_attr = {:from => row.from,
 										:to => row.to,
 										:company_name => row.company_name,
@@ -114,7 +114,7 @@ module LinkedinHandler
 			
 			#languages
 			cv_temp = []
-			self.cv_languages.all.each do |row|
+			self.cv_languages.load.each do |row|
 				cv_attr = {:language => row.language,
 										:proficiency => row.proficiency}
 				cv_temp << cv_attr						
@@ -123,7 +123,7 @@ module LinkedinHandler
 			
 			#skills
 			cv_temp = []
-			self.cv_skills.all.each do |row|
+			self.cv_skills.load.each do |row|
 				cv_attr = {:name => row.name,
 										:sequence => row.sequence}
 				cv_temp << cv_attr						
@@ -132,7 +132,7 @@ module LinkedinHandler
 			
 			#educations
 			cv_temp = []
-			self.cv_educations.all.each do |row|
+			self.cv_educations.load.each do |row|
 			cv_attr = {:school => row.school,
 								:from_year => row.from_year,
 								:to_year => row.to_year,

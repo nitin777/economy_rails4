@@ -45,7 +45,7 @@ class FrontsController < ApplicationController
   	if params[:user]
 		  @o_single.password = params[:user][:password]
 		  @o_single.password_confirmation = params[:user][:password_confirmation]
-		  @o_single.password_required = true  		
+		  @o_single.password_required = true
 	    respond_to do |format|
 	      if @o_single.update_attributes(user_params)
 	        format.html { redirect_to users_url, notice: t("general.successfully_updated") }
