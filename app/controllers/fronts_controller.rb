@@ -234,7 +234,7 @@ class FrontsController < ApplicationController
   		#authorization
     	linkedin_auth = Authorization.find_by_provider_and_user_id(:linkedin, current_selected_user.id)   
 	    if linkedin_auth.present?
-	    	begin
+	    	#begin
 		    	#destoy data if refresh
 		    	if refresh and current_selected_user.cv
 		    		Cv.destroy(current_selected_user.cv.id)
@@ -259,9 +259,9 @@ class FrontsController < ApplicationController
 					current_user.personal_details(user.date_of_birth, user.headline, user.phone_numbers)
 					
 					flash.discard[:notice] = t("general.successfully_imported_profile")
-        rescue Exception => e
-          flash.discard[:error_profile] = t("general.error_linkedin_profile")
-        end					
+        #rescue Exception => e
+          #flash.discard[:error_profile] = t("general.error_linkedin_profile")
+        #end					
 	  	end
 		end
   end

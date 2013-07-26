@@ -11,7 +11,7 @@ Economy::Application.configure do
   config.eager_load = true
 
   # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
+  config.consider_all_requests_local       = true
   config.action_controller.perform_caching = true
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
@@ -78,8 +78,8 @@ Economy::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
   
-  BASE_URL = "http://economyofone.com"
-  BASE_URL_DOMAIN = "economyofone.com"
+  BASE_URL = "http://economyofone.herokuapp.com"
+  BASE_URL_DOMAIN = "economyofone.herokuapp.com"
   MAIL_USER_NAME = "nbarai77@gmail.com"
   MAIL_PASSWORD = "nitin777"
   MAIL_PORT = "587"
