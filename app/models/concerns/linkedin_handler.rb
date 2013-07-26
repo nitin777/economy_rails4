@@ -39,7 +39,7 @@ module LinkedinHandler
 				cv_attr = [:user_id => self.id, 
 															:cv_id => cv.id,
 															:language => row.language.name,
-															:proficiency => row.proficiency.name]
+															:proficiency => (row.proficiency.name unless row.proficiency.nil?)]
 															
 				CvLanguage.create(cv_attr)
 			end      	

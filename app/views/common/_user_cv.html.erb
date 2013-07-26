@@ -26,7 +26,7 @@
                   <% unless user_cv_data[:educations][0].nil? %>
                     <p><strong>Education</strong>: <%= "#{user_cv_data[:educations][0][:degree]} -  #{user_cv_data[:educations][0][:school]}" %> </p>
                   <% end %>  
-                  <% unless user_cv_data[:personal_info][:birthdate].empty? %>
+                  <% if user_cv_data[:personal_info][:birthdate] != '' %>
                     <p><strong>Born</strong>: <%= Date.parse(user_cv_data[:personal_info][:birthdate]).strftime('%e-%b-%Y') %></p>
                   <% end %>                      
                 </td>
