@@ -8,13 +8,12 @@
     </div>
   
     <div class="button">
-      
       <%= f.button t("general.send"), :class => 'btn btn-info', :id => "invite_btn" %>      
       <%= link_to t("general.back"), feedbacks_path, :class => 'btn btn-info' %>
-      <span id="spinner" style="margin-right: 235px; float: right; display: none;">
-        <%= image_tag "loading.gif" %>
-      </span>  
     </div>
+    <span id="spinner" style="margin: -29px 0 0 147px; float: left; display: none;">
+      <%= image_tag "loading.gif" %>
+    </span>      
     <div class="cl"></div>
   <% end %>
 </div>
