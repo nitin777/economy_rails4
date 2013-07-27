@@ -8,14 +8,10 @@ class UserSessionsController < ApplicationController
   end
   
   def new
-  	unless session[:user_id].nil?
-  		redirect_to users_path
-  	else
-			@user_session = UserSession.new
-			respond_to do |format|
-				format.html # new.html.erb
-				format.xml { render :xml => @user_session }
-			end
+		@user_session = UserSession.new
+		respond_to do |format|
+			format.html # new.html.erb
+			format.xml { render :xml => @user_session }
 		end
   end
 

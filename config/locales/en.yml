@@ -32,7 +32,7 @@ en:
     next: "Next"
     birthdate: "Birth Date"
     show_detail: "Show detail"
-    login: "Sign In"
+    login: "Login as admin"
     is_active: "Active"
     admin_panel: "Admin Panel"
     company: "Company"

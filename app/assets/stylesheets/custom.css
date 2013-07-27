@@ -107,7 +107,7 @@ table.pretty {
 .loginfom h3 { 
     font-size: 20px;
     font-weight: bold;
-    margin: 0 0 0px;  
+    margin: 0 0 0px;
 }
 
 
@@ -182,15 +182,8 @@ a.signup_button {
     border-radius: 10px 10px 10px 10px; 
 }
 footer {
-    background: url("/assets/bg-footer.gif") repeat-x scroll 0 0 #1C1C1C;
-    clear: both;
-    margin: 30px auto;
-    overflow: hidden;
     padding: 13px 0 13px;
     text-align: center;
-    font-style: italic;
-    font: Arial;
-    color: #fff;
 }
 footer nav {
     float: none;
@@ -334,3 +327,4 @@ table textarea {
   margin: 30px 5px 0 0;
   float: right;  
 }
+.marTop9 {margin-top:9px}

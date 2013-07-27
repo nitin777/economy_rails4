@@ -1,5 +1,5 @@
 <% if @invite %>
-    <div class="loginfom frontform" data-no-turbolink>
+    <div class="" data-no-turbolink>
       <h3><%= t("general.give_feedback_to") %> <%= @invite.inviting.name %></h3>
       <%= form_for(@invite, :url => leave_feedback_path) do |f| %>
         <%= f.hidden_field :tracking_pixel, :value => params[:tracking_pixel] %>

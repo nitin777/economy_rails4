@@ -4321,7 +4321,7 @@ input[type="submit"].btn.btn-mini {
 
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-  position: fixed;
+  position: absolute;
   right: 0;
   left: 0;
   z-index: 1030;
@@ -4393,7 +4393,7 @@ input[type="submit"].btn.btn-mini {
 .navbar .nav > li > a {
   float: none;
   padding: 10px 15px 10px;
-  color: #777777;
+  color: #0088CC;
   text-decoration: none;
   text-shadow: 0 1px 0 #ffffff;
 }
