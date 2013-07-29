@@ -12,26 +12,47 @@
      <thead>
        <tr><td>&nbsp;</td></tr> 
       <tr>
-        <th width="20%"></th>
-        <th width="10%"><%= t("general.invited_date")%></th>
-        <th width="10%">&nbsp;</th>
-        <th width="50%"><%= t("general.feedbacks") %></th>
-        <th width="10%"><%= t("general.feedback_date")%></th>
+        <td width="10%"></td>
+        <td width="20%"><%= t("general.invited_date")%></td>
+        <td width="20%"><%= t("general.mail_sent_to")%></td>
+        <td width="20%"><%= t("general.mail_read_on")%></td>
+        <td width="30%"><%= t("general.feedback") %></td>
       </tr>
      <thead>   
       <tbody>
-          <% @feedbacks.load.each do |o_row| %>
-            <tr>
-              <td width="20%"><%= o_row.invited.email %></td>
-              <td><%= o_row.created_at.to_s(:default_date) if o_row.created_at %></td>
-              <td>&nbsp;</td>
-              <td><p><%= o_row.feedback.blank? ? '--' : o_row.feedback %></p></td>
-              <td><%= Date.parse(o_row.feedback_date.to_s).strftime('%e-%b-%Y') if o_row.feedback_date %></td>
-            </tr>
+          <% arr_host_name = [] %>
+          <% @feedbacks.load.order('host_name').each do |o_row| %>
+            <% unless o_row.invited.email.nil? or o_row.invited.email.empty? %>
+              <tr>
+                <td>
+                  <% unless arr_host_name.include?(o_row.host_name) %>
+                    <b><%= o_row.host_name.capitalize %>:</b> 
+                  <% end %>
+                  <% arr_host_name << o_row.host_name %>
+                </td>
+                <td><b><%= o_row.created_at.to_s(:default_date) if o_row.created_at %></b></td>
+                <td><%= o_row.invited.email %></td>
+                <td>
+                <% o_row.readlogs.each do |r| %>
+                  <b><%= r.created_at.to_s(:default_date) if r.created_at %></b><br />
+                <% end %>
+                </td>
+                <td><p>On <%= Date.parse(o_row.feedback_date.to_s).strftime('%e-%b-%Y') if o_row.feedback_date %> <%= o_row.invited.email %> said: <%= o_row.feedback.blank? ? '--' : o_row.feedback %></p></td>
+              </tr>
+             <% else %>
+              <tr>
+                <td>
+                  <b><%= o_row.readlogs.first.ip_add if o_row.readlogs.first %></b>
+                </td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td><p>On <%= Date.parse(o_row.feedback_date.to_s).strftime('%e-%b-%Y') if o_row.feedback_date %> <%= o_row.invited.email %> said: <%= o_row.feedback.blank? ? '--' : o_row.feedback %></p></td>
+              </tr>               
+             <% end %> 
           <% end %>
        </tbody>
     </table>
-    <%= will_paginate @feedbacks %>
   <% else %>
     <b><%= t("general.please_invite_and_send_cv") %></b>
   <% end %>

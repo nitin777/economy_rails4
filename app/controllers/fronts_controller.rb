@@ -13,6 +13,10 @@ class FrontsController < ApplicationController
   		end	
   	end	
   end
+  
+  #user login
+  def login
+  end
 
 	#forgot password
   def forgot_password
@@ -65,7 +69,7 @@ class FrontsController < ApplicationController
  	#authenticate user though linkedin network
   def auth_linkedin_login
 		auth_hash = request.env['omniauth.auth']
-		auth_response = Authorization.find_or_create_linkedin_user(auth_hash)
+		auth_response = Authorization.find_or_create_linkedin_user(auth_hash, session[:tracking_pixel])
 		# Create the session
 		user = auth_response.user
 		session[:user_id] = user.id
@@ -118,7 +122,9 @@ class FrontsController < ApplicationController
 			
 			#invite record not found
 			if is_invited[:result] == false
-				invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), :is_original => true)
+				host_name = get_host_name(invited_user.email)
+				invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), 
+																:is_original => true, :host_name => host_name)
 			else				
 				invite = is_invited[:invite]				
 				invite.created_at = Time.now
@@ -153,7 +159,7 @@ class FrontsController < ApplicationController
   	if @invite
   		@invite.is_read = true
   		@invite.save
-  		ReadLog.find_or_create_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, @invite.invited_user_id)
+  		#ReadLog.find_or_create_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, @invite.invited_user_id)
   		session[:tracking_pixel] = params[:tracking_pixel]
   		redirect_to leave_feedback_path if current_user
   	end
@@ -161,21 +167,39 @@ class FrontsController < ApplicationController
   
   def leave_feedback
   	@invite = Invite.find_by_tracking_pixel(session[:tracking_pixel])
-  	if current_user
+  	if current_user and session[:tracking_pixel]
 	  	if params[:invite]
-	  		if @invite
-	  			@invite.feedback = params[:invite][:feedback]
-	  			@invite.feedback_date = Time.now
-	  			@invite.save
+	  		unless current_user.id == @invite.invited_user_id
+	  			#invite
+	  			o_invite = Invite.find_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, current_user.id)
+	  			if o_invite
+		  			o_invite.feedback = params[:invite][:feedback]
+		  			o_invite.feedback_date = Time.now
+		  			o_invite.save
+	  			else
+	  				host_name = get_host_name(current_user.email)	
+	  				invite_create = Invite.create(:inviting_user_id => @invite.inviting_user_id, :invited_user_id => current_user.id, 
+	  																			:is_read => true, :feedback => params[:invite][:feedback], :feedback_date => Time.now, 
+	  																			:host_name => host_name)
+	  																			
+						ReadLog.create(:inviting_user_id => invite_create.inviting_user_id, :invited_user_id => invite_create.invited_user_id, :ip_add => request.remote_ip, :host_name => host_name)	  																			
+	  																			
+	  			end
 	  			flash.discard[:notice] = t("general.feedback_has_been_sent", email: @invite.inviting.name)
-	  		end
+	  		else
+		  		if @invite
+		  			@invite.feedback = params[:invite][:feedback]
+		  			@invite.feedback_date = Time.now
+		  			@invite.save
+		  			flash.discard[:notice] = t("general.feedback_has_been_sent", email: @invite.inviting.name)
+		  		end
+		  	end	
 	  	else
-	  		invite = Invite.find_by_tracking_pixel(session[:tracking_pixel])
-	  		unless current_user.id == invite.invited_user_id
-	  			invite_create = Invite.create(:inviting_user_id => invite.inviting_user_id, :invited_user_id => current_user.id, :tracking_pixel => SecureRandom.hex(15), :is_read => true)
-	  			session[:tracking_pixel] = invite_create.tracking_pixel
-	  			redirect_to leave_feedback_path
-	  			return 
+	  		unless current_user.id == @invite.invited_user_id
+	  			if current_user.is_inactive_cv
+	  				current_user.email = ''
+	  				current_user.save(:validate => false)
+	  			end 
 	  		end		
 			end
 		end	
@@ -183,13 +207,27 @@ class FrontsController < ApplicationController
   
   #show all feedbacks of user
   def feedbacks
-  	@feedbacks = current_user.invitings.where(:is_read => true).paginate(:per_page => 10, :page => params[:page])
-  	user_inviting = current_user.invitings.where(:is_read => true).select("count(id) as id, feedback_date").group("feedback_date")
+  	@feedbacks = current_user.invitings
+  	user_inviting = current_user.invitings_read_logs.select("count(id) as id, DATE(created_at) as created_at").group("DATE(created_at)")
 
     #User CV saw line chart
   	result_data = user_saw_cv_data(user_inviting)
   	create_saw_cv_chart(result_data)
-  end  
+  end 
+
+	#read log create when user show CV
+  def readlog
+  	if params[:tracking_pixel]
+  		invite = Invite.find_by_tracking_pixel(params[:tracking_pixel])
+  		host_name = ''
+  		if invite
+  			invited_user_email = invite.invited.email
+  			host_name = get_host_name(invite.invited.email) 
+  		end
+  		ReadLog.create(:inviting_user_id => invite.inviting_user_id, :invited_user_id => invite.invited_user_id, :ip_add => request.remote_ip, :host_name => host_name)
+  	end
+  	return true
+  end
 
 	private
  	
@@ -197,13 +235,14 @@ class FrontsController < ApplicationController
   def user_saw_cv_data(user_inviting)
   	usr_inv = {}
   	user_inviting.each do |i|
-  		usr_inv[i.feedback_date.to_s] = i.id
+  		usr_inv[i.created_at.to_s] = i.id
   	end
   	
   	result_arr = []
+  	j = 30
   	for i in 0..30
   		data_arr = []
-    	tmp_date = Date.today - i.days
+    	tmp_date = Date.today - j.days
     	
     	data_arr << Date.parse(tmp_date.to_s).strftime('%b %e')
     	if usr_inv[tmp_date.to_s]
@@ -211,7 +250,8 @@ class FrontsController < ApplicationController
     	else
     		data_arr << 0
     	end
-    	result_arr << data_arr 
+    	result_arr << data_arr
+    	j = j - 1
     end
     return result_arr 
   end   	
@@ -230,7 +270,7 @@ class FrontsController < ApplicationController
  	#fetch all linkeding profile data
   def generate_linkedin_profile_data(current_selected_user, refresh)
 
-    if !current_selected_user.has_cv? or refresh
+    if (!current_selected_user.has_cv? and !current_selected_user.is_inactive_cv) or refresh
   		#authorization
     	linkedin_auth = Authorization.find_by_provider_and_user_id(:linkedin, current_selected_user.id)   
 	    if linkedin_auth.present?

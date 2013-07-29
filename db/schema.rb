@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130719115852) do
+ActiveRecord::Schema.define(version: 20130729164220) do
 
   create_table "authorizations", force: true do |t|
     t.string   "provider"
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 20130719115852) do
     t.date     "feedback_date"
     t.boolean  "is_read",          default: false
     t.boolean  "is_original",      default: false
+    t.string   "host_name"
   end
 
   create_table "read_logs", force: true do |t|
@@ -97,6 +98,8 @@ ActiveRecord::Schema.define(version: 20130719115852) do
     t.integer  "invited_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "ip_add"
+    t.string   "host_name"
   end
 
   create_table "roles", force: true do |t|
@@ -151,6 +154,7 @@ ActiveRecord::Schema.define(version: 20130719115852) do
     t.string   "last_login_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_inactive_cv",     default: false
   end
 
 end

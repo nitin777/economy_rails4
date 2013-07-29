@@ -72,4 +72,16 @@ class ApplicationController < ActionController::Base
 	  end
 	  return {result: false, is_user: false}
   end
+  
+  def get_host_name(email)
+  	unless email.nil?
+  		email_arr = []
+  		email_arr = email.split("@")
+  		if email_arr[1]
+  			email_arr = email_arr[1].split(".")
+  			email_arr[0]
+  		end
+  	end
+  end
+  
 end

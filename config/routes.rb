@@ -10,6 +10,8 @@ Economy::Application.routes.draw do
 	get 'login' => 'user_sessions#new', :as => :login
 	get 'dashboard' => 'fronts#dashboard', :as => :dashboard
 	get 'feedbacks' => 'fronts#feedbacks', :as => :feedbacks
+	get 'readlog' => 'fronts#readlog', :as => :readlog
+	
 	
 	get '/p/:username' => 'fronts#dashboard'
 	
@@ -19,6 +21,8 @@ Economy::Application.routes.draw do
 	get '/is_email_invited' => 'fronts#is_email_invited', :as => :is_email_invited
 	
 	get 'subscribe' => 'fronts#subscribe', :as => :subscribe
+	get 'signin' => 'fronts#login', :as => :user_login
+	
 	match '/leave/feedback' => 'fronts#leave_feedback', :as => :leave_feedback, via: [:get, :post, :patch]
 	
 	get 'cv.xml' => 'fronts#cv_xml', :as => :cv_xml
