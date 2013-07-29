@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130729164220) do
+ActiveRecord::Schema.define(version: 20130729182040) do
 
   create_table "authorizations", force: true do |t|
     t.string   "provider"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 20130729164220) do
     t.datetime "confirmed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.date     "feedback_date"
+    t.datetime "feedback_date"
     t.boolean  "is_read",          default: false
     t.boolean  "is_original",      default: false
     t.string   "host_name"
