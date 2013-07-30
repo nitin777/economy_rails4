@@ -293,7 +293,9 @@ class FrontsController < ApplicationController
  	#fetch all linkeding profile data
   def generate_linkedin_profile_data(current_selected_user, refresh)
 
-    if (!current_selected_user.has_cv? and !current_selected_user.is_inactive_cv) or refresh
+    if (!current_selected_user.has_cv? and session[:tracking_pixel].nil?) or refresh
+    	current_selected_user.is_inactive_cv = false
+    	current_selected_user.save(:validate => false)
   		#authorization
     	linkedin_auth = Authorization.find_by_provider_and_user_id(:linkedin, current_selected_user.id)   
 	    if linkedin_auth.present?
