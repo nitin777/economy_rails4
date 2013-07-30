@@ -66,6 +66,10 @@ class User < ActiveRecord::Base
   	self.cv	
   end
   
+  def is_not_invited_user(invited_user_id)
+  	self.id != invited_user_id
+  end
+  
   def name(shorten=true)
     unless first_name.nil? && last_name.nil? or first_name.empty? && last_name.empty?
       [first_name, last_name].join(" ")

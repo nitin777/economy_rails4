@@ -1,6 +1,6 @@
 class FrontsController < ApplicationController
 	require 'builder'
-  before_filter :require_user, :only => [:change_password, :cv_xml, :invite, :feedbacks]
+  before_filter :require_user, :only => [:change_password, :cv_xml, :invite, :feedbacks, :leave_feedback]
   before_filter :set_header_menu_active
   
   #dashboard
@@ -109,27 +109,42 @@ class FrontsController < ApplicationController
 			
 			#user not found
 			if is_invited[:is_user] == false
-				#user role invite create 
-	    	invited_user = User.create(:username => params[:user][:email],
-	    									:email => params[:user][:email],
-	    									:register_token => SecureRandom.hex(15),
-	    									:is_provider => true)
-	    	invited_user.save(:validate => false)								
+				
+				#user role invite create
+				
+	    	invited_user = User.new
+				invited_user.username = params[:user][:email]
+				invited_user.email = params[:user][:email]
+				invited_user.register_token = SecureRandom.hex(15)
+				invited_user.save(:validate => false)
+				
 				invited_user.role = Role.find_by_role_type("User")
+				
 			else
 				invited_user = is_invited[:user] 
 			end		
 			
 			#invite record not found
 			if is_invited[:result] == false
+				
 				host_name = get_host_name(invited_user.email)
-				invite = Invite.create(:inviting_user_id => current_user.id, :invited_user_id => invited_user.id, :tracking_pixel => SecureRandom.hex(15), 
-																:is_original => true, :host_name => host_name)
+				
+				attr = [:inviting_user_id => current_user.id, 
+								:invited_user_id => invited_user.id, 
+								:tracking_pixel => SecureRandom.hex(15),
+								:host_name => host_name]
+								
+				invite = Invite.create(attr)
+				invite = Invite.find(invite[0]["id"])
+				
 			else				
-				invite = is_invited[:invite]				
+				invite = is_invited[:invite]
 				invite.created_at = Time.now
 				invite.save
 			end
+			
+			
+			puts invite.inspect
 			
 			#options
 			opts = {:username => current_user.name, :invited_user => invited_user.name, :contact => current_user.mobile}
@@ -157,9 +172,6 @@ class FrontsController < ApplicationController
   def feedback
   	@invite = Invite.find_by_tracking_pixel(params[:tracking_pixel])
   	if @invite
-  		@invite.is_read = true
-  		@invite.save
-  		#ReadLog.find_or_create_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, @invite.invited_user_id)
   		session[:tracking_pixel] = params[:tracking_pixel]
   		redirect_to leave_feedback_path if current_user
   	end
@@ -167,9 +179,9 @@ class FrontsController < ApplicationController
   
   def leave_feedback
   	@invite = Invite.find_by_tracking_pixel(session[:tracking_pixel])
-  	if current_user and session[:tracking_pixel]
+  	if current_user and session[:tracking_pixel] and @invite
 	  	if params[:invite]
-	  		unless current_user.id == @invite.invited_user_id
+	  		if current_user.is_not_invited_user(@invite.invited_user_id)
 	  			#invite
 	  			o_invite = Invite.find_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, current_user.id)
 	  			if o_invite
@@ -177,40 +189,48 @@ class FrontsController < ApplicationController
 		  			o_invite.feedback_date = Time.now
 		  			o_invite.save
 	  			else
-	  				host_name = get_host_name(current_user.email)	
-	  				invite_create = Invite.create(:inviting_user_id => @invite.inviting_user_id, :invited_user_id => current_user.id, 
-	  																			:is_read => true, :feedback => params[:invite][:feedback], :feedback_date => Time.now, 
-	  																			:host_name => host_name)
-	  																			
-						ReadLog.create(:inviting_user_id => invite_create.inviting_user_id, :invited_user_id => invite_create.invited_user_id, :ip_add => request.remote_ip, :host_name => host_name)	  																			
+	  				host_name = get_host_name(current_user.email)
+	  				
+	  				attr = [:inviting_user_id => @invite.inviting_user_id, 
+	  								:invited_user_id => current_user.id, 
+	  								:feedback => params[:invite][:feedback],
+	  								:feedback_date => Time.now, 
+	  								:host_name => host_name]	
+	  								
+	  				invite_create = Invite.create(attr)
+	  				
+	  				attr = [:inviting_user_id => invite_create.inviting_user_id, 
+	  								:invited_user_id => invite_create.invited_user_id, 
+	  								:ip_add => request.remote_ip, 
+	  								:host_name => host_name]
+	  																							
+						ReadLog.create(attr)
 	  																			
 	  			end
 	  			flash.discard[:notice] = t("general.feedback_has_been_sent", email: @invite.inviting.name)
 	  		else
-		  		if @invite
-		  			@invite.feedback = params[:invite][:feedback]
-		  			@invite.feedback_date = Time.now
-		  			@invite.save
-		  			flash.discard[:notice] = t("general.feedback_has_been_sent", email: @invite.inviting.name)
-		  		end
+	  			@invite.feedback = params[:invite][:feedback]
+	  			@invite.feedback_date = Time.now
+	  			@invite.save
+	  			flash.discard[:notice] = t("general.feedback_has_been_sent", email: @invite.inviting.name)
 		  	end	
 	  	else
-	  		unless current_user.id == @invite.invited_user_id
+	  		if current_user.is_not_invited_user(@invite.invited_user_id)
 	  			if current_user.is_inactive_cv
-	  				current_user.email = ''
+	  				current_user.email = nil
 	  				current_user.save(:validate => false)
-	  			end 
-	  		end		
+	  			end
+	  		end
 			end
-		end	
+		end
   end
   
   #show all feedbacks of user
   def feedbacks
-  	@feedbacks = current_user.invitings
-  	user_inviting = current_user.invitings_read_logs.select("count(id) as id, DATE(created_at) as created_at").group("DATE(created_at)")
-
+  	@feedbacks = current_user.invitings.load.order('host_name')
+  	
     #User CV saw line chart
+    user_inviting = current_user.invitings_read_logs.select("count(id) as id, DATE(created_at) as created_at").group("DATE(created_at)")
   	result_data = user_saw_cv_data(user_inviting)
   	create_saw_cv_chart(result_data)
   end 
@@ -219,14 +239,16 @@ class FrontsController < ApplicationController
   def readlog
   	if params[:tracking_pixel]
   		invite = Invite.find_by_tracking_pixel(params[:tracking_pixel])
-  		host_name = ''
   		if invite
-  			invited_user_email = invite.invited.email
-  			host_name = get_host_name(invite.invited.email) 
+  			host_name = get_host_name(invite.invited.email)
+	  		attr = [:inviting_user_id => invite.inviting_user_id, 
+	  						:invited_user_id => invite.invited_user_id, 
+	  						:ip_add => request.remote_ip, 
+	  						:host_name => host_name]
+  						
+  			ReadLog.create(attr)
   		end
-  		ReadLog.create(:inviting_user_id => invite.inviting_user_id, :invited_user_id => invite.invited_user_id, :ip_add => request.remote_ip, :host_name => host_name)
   	end
-  	return true
   end
 
 	private

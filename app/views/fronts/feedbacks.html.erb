@@ -21,7 +21,7 @@
      <thead>   
       <tbody>
           <% arr_host_name = [] %>
-          <% @feedbacks.load.order('host_name').each do |o_row| %>
+          <% @feedbacks.each do |o_row| %>
             <% unless o_row.invited.email.nil? or o_row.invited.email.empty? %>
               <tr>
                 <td>
@@ -42,7 +42,6 @@
                     On <%= o_row.feedback_date.to_s(:pretty) if o_row.feedback_date %> <%= o_row.invited.email %> said: "<%= o_row.feedback %>"
                   <% end %>  
                 </td>
-                    
               </tr>
              <% else %>
               <tr>
