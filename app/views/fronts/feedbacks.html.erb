@@ -20,7 +20,7 @@
       </tr>
      <thead>   
       <tbody>
-          <% arr_host_name = [] %>
+          <% arr_host_name = feedback_arr = [] %>
           <% @feedbacks.each do |o_row| %>
             <% unless o_row.invited.email.nil? or o_row.invited.email.empty? %>
               <tr>
@@ -44,20 +44,32 @@
                 </td>
               </tr>
              <% else %>
-              <tr>
-                <td>
-                  <b><%= o_row.readlogs.first.ip_add if o_row.readlogs.first %></b>
-                </td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>
-                   <% unless o_row.feedback.blank? %>
-                    On <%= o_row.feedback_date.to_s(:pretty) if o_row.feedback_date %> someone at <%= o_row.readlogs.first.ip_add if o_row.readlogs.first %> said: "<%= o_row.feedback %>"
-                   <% end %> 
-                </td>
-              </tr>               
+              <% 
+                o_readlogs = o_row.readlogs.first
+                if o_readlogs
+                  feedback_hash = {}
+                  feedback_hash["ip_add"] = o_readlogs.ip_add
+                  feedback_hash["feedback"] = o_row.feedback
+                  feedback_hash["feedback_date"] = o_row.feedback_date
+                  feedback_arr << feedback_hash  
+                end 
+              %>
              <% end %> 
+          <% end %>
+          <% feedback_arr.each do |feedback| %>
+            <tr>
+              <td>
+                <b><%= feedback["ip_add"] %></b>
+              </td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+              <td>
+                 <% unless feedback["feedback"].blank? %>
+                  On <%= feedback["feedback_date"].to_s(:pretty) if feedback["feedback_date"] %> someone at <%= feedback["ip_add"] %> said: "<%= feedback["feedback"] %>"
+                 <% end %> 
+              </td>
+            </tr>          
           <% end %>
        </tbody>
     </table>

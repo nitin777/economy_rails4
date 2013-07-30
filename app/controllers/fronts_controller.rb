@@ -116,6 +116,8 @@ class FrontsController < ApplicationController
 				invited_user.username = params[:user][:email]
 				invited_user.email = params[:user][:email]
 				invited_user.register_token = SecureRandom.hex(15)
+				password = SecureRandom.hex(15)
+				invited_user.password = invited_user.password_confirmation = password 
 				invited_user.save(:validate => false)
 				
 				invited_user.role = Role.find_by_role_type("User")
@@ -129,13 +131,12 @@ class FrontsController < ApplicationController
 				
 				host_name = get_host_name(invited_user.email)
 				
-				attr = [:inviting_user_id => current_user.id, 
+				attr = {:inviting_user_id => current_user.id, 
 								:invited_user_id => invited_user.id, 
 								:tracking_pixel => SecureRandom.hex(15),
-								:host_name => host_name]
+								:host_name => host_name}
 								
 				invite = Invite.create(attr)
-				invite = Invite.find(invite[0]["id"])
 				
 			else				
 				invite = is_invited[:invite]
@@ -191,18 +192,18 @@ class FrontsController < ApplicationController
 	  			else
 	  				host_name = get_host_name(current_user.email)
 	  				
-	  				attr = [:inviting_user_id => @invite.inviting_user_id, 
+	  				attr = {:inviting_user_id => @invite.inviting_user_id, 
 	  								:invited_user_id => current_user.id, 
 	  								:feedback => params[:invite][:feedback],
 	  								:feedback_date => Time.now, 
-	  								:host_name => host_name]	
+	  								:host_name => host_name}
 	  								
 	  				invite_create = Invite.create(attr)
 	  				
-	  				attr = [:inviting_user_id => invite_create.inviting_user_id, 
+	  				attr = {:inviting_user_id => invite_create.inviting_user_id, 
 	  								:invited_user_id => invite_create.invited_user_id, 
 	  								:ip_add => request.remote_ip, 
-	  								:host_name => host_name]
+	  								:host_name => host_name}
 	  																							
 						ReadLog.create(attr)
 	  																			
@@ -241,10 +242,10 @@ class FrontsController < ApplicationController
   		invite = Invite.find_by_tracking_pixel(params[:tracking_pixel])
   		if invite
   			host_name = get_host_name(invite.invited.email)
-	  		attr = [:inviting_user_id => invite.inviting_user_id, 
+	  		attr = {:inviting_user_id => invite.inviting_user_id, 
 	  						:invited_user_id => invite.invited_user_id, 
 	  						:ip_add => request.remote_ip, 
-	  						:host_name => host_name]
+	  						:host_name => host_name}
   						
   			ReadLog.create(attr)
   		end
