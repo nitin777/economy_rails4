@@ -103,7 +103,12 @@ table.pretty {
 .headline { margin-bottom:10px; padding-bottom:10px; }
 
 .menu { margin-top:-21px; clear:both;}
-.loginfom { margin:10px auto; padding:20px; width:96%; background:#fff; border:#cececd solid 1px; -webkit-border-radius:10px;  -moz-border-radius:10px;  border-radius:10px; -webkit-box-shadow:  0px 0px 3px 3px rgba(206, 206, 205, 0.5); box-shadow:  0px 0px 3px 3px rgba(206, 206, 205, 0.5);  }
+.loginfom { 
+    margin: -30px auto;
+    width: 1000px;
+    border-left: 1px solid #ffffff;
+    border-right: 1px solid #ffffff;
+}
 .loginfom h3 { 
     font-size: 20px;
     font-weight: bold;
@@ -182,8 +187,9 @@ a.signup_button {
     border-radius: 10px 10px 10px 10px; 
 }
 footer {
-    padding: 13px 0 13px;
     text-align: center;
+    border-top: 1px solid #D4CDC1;
+    padding-top: 30px;    
 }
 footer nav {
     float: none;

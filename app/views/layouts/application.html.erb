@@ -18,20 +18,22 @@
 </head>
 <body>
   <script type="text/javascript">$(".row-fluid input:text, #content textarea").eq(0).focus();</script>
-  <%= render 'layouts/header' %>
+  
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="row-fluid"><br /><br />
         <div class="loginfom">
+    			<%= render 'layouts/header' %>    	
           <% if flash[:notice] %>
             <div class="alert-success" id="notice"><%= flash[:notice] %></div>
             <% flash[:notice] = nil %>
           <% end %>
           <%= yield %>
+          <div class="clearb">&nbsp;</div>
+          <footer class="footerFront"><%= render 'layouts/footer' %></footer>
         </div>  
       <div>
     <div>
-    <footer class="footerFront"><%= render 'layouts/footer' %></footer>
   <div>
 </body>
 </html>

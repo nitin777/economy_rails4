@@ -4147,10 +4147,10 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar {
-  *position: relative;
+ /* *position: relative;
   *z-index: 2;
   margin-bottom: 20px;
-  overflow: visible;
+  overflow: visible;*/
   color: #777777;
 }
 
@@ -4195,6 +4195,7 @@ input[type="submit"].btn.btn-mini {
   height: auto;
 }
 
+/*
 .navbar .brand {
   display: block;
   float: left;
@@ -4205,7 +4206,7 @@ input[type="submit"].btn.btn-mini {
   color: #777777;
   text-shadow: 0 1px 0 #ffffff;
 }
-
+*/
 .navbar .brand:hover {
   text-decoration: none;
 }
@@ -4321,11 +4322,12 @@ input[type="submit"].btn.btn-mini {
 
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-  position: absolute;
-  right: 0;
-  left: 0;
-  z-index: 1030;
-  margin-bottom: 0;
+    border-bottom: 1px solid #D4CDC1;
+    left: 0;
+    margin-bottom: 20px;
+    /*position: absolute;*/
+    right: 0;
+    z-index: 1030;
 }
 
 .navbar-fixed-top .navbar-inner,
@@ -4353,7 +4355,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .navbar-fixed-top {
-  top: 0;
+  /*top: 0;*/
 }
 
 .navbar-fixed-top .navbar-inner,
@@ -4384,6 +4386,7 @@ input[type="submit"].btn.btn-mini {
 .navbar .nav.pull-right {
   float: right;
   margin-right: 0;
+  margin-top: -40px;
 }
 
 .navbar .nav > li {

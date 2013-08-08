@@ -1,11 +1,6 @@
-<div class="footer_content">
-    <% if get_all_pages.size > 0 %>
-      <% for o_row in get_all_pages %>
-        <%= link_to o_row.name, "/#{o_row.page_route}" %> |
-      <% end %>
+  <% if get_all_pages.size > 0 %>
+    <% for o_row in get_all_pages %>
+      <%= link_to o_row.name, "/#{o_row.page_route}" %> |
     <% end %>
-    <%= link_to t("general.login"), login_path %> |
-  <%= t("general.copyright_all_rights_reserved_html") %>
-</div>
-</div>
-</div>
+  <% end %>
+  <%= link_to t("general.login"), login_path %> | <%= t("general.copyright_all_rights_reserved_html") %>
