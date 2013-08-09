@@ -186,8 +186,10 @@ class FrontsController < ApplicationController
 	  			#invite
 	  			o_invite = Invite.find_by_inviting_user_id_and_invited_user_id(@invite.inviting_user_id, current_user.id)
 	  			if o_invite
+	  			  host_name = get_host_name(current_user.email)
 		  			o_invite.feedback = params[:invite][:feedback]
 		  			o_invite.feedback_date = Time.now
+		  			o_invite.host_name = host_name 
 		  			o_invite.save
 	  			else
 	  				host_name = get_host_name(current_user.email)

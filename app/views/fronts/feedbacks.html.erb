@@ -20,13 +20,14 @@
       </tr>
      <thead>   
       <tbody>
-          <% arr_host_name = feedback_arr = [] %>
+          <% arr_host_name = [] %>
+          <% feedback_arr = [] %>
           <% @feedbacks.each do |o_row| %>
             <% unless o_row.invited.email.nil? or o_row.invited.email.empty? %>
               <tr>
                 <td>
                   <% unless arr_host_name.include?(o_row.host_name) %>
-                    <b><%= o_row.host_name.capitalize %>:</b> 
+                    <b><%= o_row.host_name.capitalize if o_row.host_name %></b> 
                   <% end %>
                   <% arr_host_name << o_row.host_name %>
                 </td>
